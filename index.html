@@ -181,23 +181,34 @@
         
         // ============ ГЛАВНОЕ: ОТПРАВКА РИСУНКА НА ТВОЙ ПК ============
        function sendDrawing() {
+    const status = document.getElementById('status');
+    status.textContent = '⏳ Отправка...';
+    
     canvas.toBlob((blob) => {
         const formData = new FormData();
         formData.append('drawing', blob, `drawing_${Date.now()}.png`);
         formData.append('username', document.getElementById('username').value);
         formData.append('message', document.getElementById('message').value);
         
-        // 🔥 ВАЖНО: ВСТАВЬ СЮДА СВОЙ ВНЕШНИЙ IP!
-        fetch('http://31.47.170.167:3000/upload', {
+        // 🔥 ВСТАВЬ СЮДА АДРЕС ТВОЕГО WORKER!
+        const WORKER_URL = 'https://drawing-receiver.твой-поддомен.workers.dev';
+        
+        fetch(WORKER_URL, {  // ← Отправляем НА WORKER, а не на localhost!
             method: 'POST',
             body: formData
         })
         .then(res => res.json())
         .then(data => {
-            status.textContent = '✅ Рисунок отправлен! Спасибо!';
+            if (data.success) {
+                status.textContent = '✅ Рисунок отправлен тебе в Telegram!';
+                status.style.background = '#d4edda';
+            } else {
+                throw new Error(data.error);
+            }
         })
         .catch(err => {
-            status.textContent = '❌ Ошибка отправки. Сервер не отвечает?';
+            status.textContent = '❌ Ошибка. Попробуй ещё раз.';
+            status.style.background = '#f8d7da';
             console.error(err);
         });
     }, 'image/png');
