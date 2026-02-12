@@ -198,7 +198,7 @@
                 formData.append('time', new Date().toLocaleString());
                 
                 // 5. ОТПРАВЛЯЕМ НА ТВОЙ ЛОКАЛЬНЫЙ СЕРВЕР
-                fetch('http:// 172.19.192.1/upload', {
+                fetch('http:// 172.19.192.1:3000/upload', {
                     method: 'POST',
                     body: formData
                 })
