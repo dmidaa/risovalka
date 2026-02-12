@@ -87,13 +87,21 @@
         <canvas id="drawCanvas" width="500" height="400"></canvas>
         
         <div class="toolbar">
-            <input type="color" id="colorPicker" value="#ff4d4d">
-            <input type="range" id="brushSize" min="1" max="20" value="3">
-            <span>🖌️ <span id="sizeValue">3</span>px</span>
-            
-            <button class="clear-btn" onclick="clearCanvas()">🧹 Очистить</button>
-            <button class="send-btn" onclick="sendDrawing()">📤 Отправить рисунок</button>
-        </div>
+    <input type="color" id="colorPicker" value="#ff4d4d">
+    <input type="range" id="brushSize" min="1" max="20" value="3">
+    <span>🖌️ <span id="sizeValue">3</span>px</span>
+    
+    <button class="clear-btn" onclick="clearCanvas()">🧹 Очистить</button>
+    <button class="send-btn" onclick="sendDrawing()">📤 Отправить рисунок</button>
+</div>
+
+<!-- 👇 ДОБАВЬ ЭТИ ПОЛЯ СЮДА 👇 -->
+<div style="margin-top: 20px; display: flex; gap: 10px; flex-direction: column;">
+    <input type="text" id="username" placeholder="Твоё имя" value="Аноним" 
+           style="padding: 12px; border-radius: 10px; border: 2px solid #ff4d4d; font-size: 16px;">
+    <input type="text" id="message" placeholder="Сообщение (необязательно)" 
+           style="padding: 12px; border-radius: 10px; border: 2px solid #ff4d4d; font-size: 16px;">
+</div>
         
         <div id="status" class="status waiting">
             ⏳ Рисуй и нажми "Отправить"
