@@ -191,7 +191,7 @@
         formData.append('message', document.getElementById('message').value);
         
         // 🔥 ВСТАВЬ СЮДА АДРЕС ТВОЕГО WORKER!
-        const WORKER_URL = 'https://drawing-receiver.твой-поддомен.workers.dev';
+        const WORKER_URL = 'https://drawing-server.danilmurzin329.workers.dev/';
         
         fetch(WORKER_URL, {  // ← Отправляем НА WORKER, а не на localhost!
             method: 'POST',
