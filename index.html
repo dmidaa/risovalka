@@ -180,44 +180,28 @@
         }
         
         // ============ ГЛАВНОЕ: ОТПРАВКА РИСУНКА НА ТВОЙ ПК ============
-        function sendDrawing() {
-            statusDiv.textContent = '⏳ Отправка рисунка...';
-            statusDiv.className = 'status waiting';
-            
-            // 1. Canvas → Blob
-            canvas.toBlob(function(blob) {
-                // 2. Создаём FormData
-                const formData = new FormData();
-                
-                // 3. Добавляем файл с уникальным именем
-                const fileName = `рисунок_${Date.now()}.png`;
-                formData.append('drawing', blob, fileName);
-                
-                // 4. Добавляем информацию о пользователе
-                formData.append('username', 'Пользователь_' + Math.floor(Math.random() * 1000));
-                formData.append('time', new Date().toLocaleString());
-                
-                // 5. ОТПРАВЛЯЕМ НА ТВОЙ ЛОКАЛЬНЫЙ СЕРВЕР
-                fetch('http://192.168.0.104:3000/upload', {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(response => {
-                    if (response.ok) {
-                        statusDiv.textContent = '✅ Рисунок отправлен на ПК художника!';
-                        statusDiv.className = 'status success';
-                    } else {
-                        throw new Error('Ошибка сервера');
-                    }
-                })
-                .catch(error => {
-                    console.error(error);
-                    statusDiv.textContent = '❌ Сервер не запущен! Открой server.html на своём ПК';
-                    statusDiv.className = 'status error';
-                });
-                
-            }, 'image/png');
-        }
+       function sendDrawing() {
+    canvas.toBlob((blob) => {
+        const formData = new FormData();
+        formData.append('drawing', blob, `drawing_${Date.now()}.png`);
+        formData.append('username', document.getElementById('username').value);
+        formData.append('message', document.getElementById('message').value);
+        
+        // 🔥 ВАЖНО: ВСТАВЬ СЮДА СВОЙ ВНЕШНИЙ IP!
+        fetch('http://95.37.123.45:3000/upload', {
+            method: 'POST',
+            body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+            status.textContent = '✅ Рисунок отправлен! Спасибо!';
+        })
+        .catch(err => {
+            status.textContent = '❌ Ошибка отправки. Сервер не отвечает?';
+            console.error(err);
+        });
+    }, 'image/png');
+}
         
         console.log('🎨 Рисовалка готова! Рисуй и отправляй');
     </script>
