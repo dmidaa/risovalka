@@ -229,6 +229,8 @@
         // ============ ГЛАВНОЕ: ОТПРАВКА РИСУНКА НА ТВОЙ ПК ============
        
         function sendDrawing() {
+    successBut();
+    successBut();
     const status = document.getElementById('status');
     
     
@@ -272,8 +274,7 @@
             button_hover.innerHTML = 'Далее';
             button_hover.className = 'canvas-button';
             document.querySelector('.container').appendChild(button_hover);
-            successBut();
-            successBut();
+            
     }
     function use_button_oc(){
             document.querySelector('button').addEventListener('click', function() {
@@ -364,9 +365,16 @@
         function use_button_oc(){
             document.querySelector('button').addEventListener('click', function() {
                 document.body.innerHTML = '';
+                const text = document.createElement('h2');
+                text.innerHTML = 'С 14 февраля 💝';
+                text.className = 'text';
+                document.body.appendChild(text);
             })
         }
-
+        
+        function lastTextFunc(){
+            
+        }
         const ctx = canvas.getContext('2d');
         let flag = false;
 
@@ -458,7 +466,7 @@
             
             
         }
-
+    
         console.log('Good');
     </script>
 </body>
