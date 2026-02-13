@@ -338,32 +338,11 @@
         `;
         document.head.appendChild(style);
         //текст
-        const title = document.createElement('h1');
-        title.innerHTML = 'Нарисуй сердечко';
-        title.style.color = 'black';
-        title.style.fontSize = '50px';
-        title.style.position = 'fixed';
-        title.style.top = '0px';
-        title.style.left = '50%';
-        title.style.transform = 'translateX(-50%)';
-        title.style.zIndex = '10000';
-        title.style.shadowBlur = '50';
-        document.body.appendChild(title);
+        const text = document.createElement('h2');
+        text.innerHTML = 'Нарисуй сердечко';
+        text.className = 'text';
+        document.body.appendChild(text);
 
-        const title_p = document.createElement('p');
-        title_p.innerHTML = '(Просто кликай)';
-        document.body.appendChild(title_p);
-        //выравнивание
-        document.body.style.cssText = `
-        margin: 0;
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        box-sizing: border-box;
-        padding: 20px;
-        `;
         //создание канвас
         const canvas = document.createElement('canvas');
         canvas.id = 'heartCanvas';
@@ -484,5 +463,6 @@
     </script>
 </body>
 </html>
+
 
 
