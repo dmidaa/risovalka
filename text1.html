@@ -241,7 +241,7 @@
         formData.append('drawing', blob, `drawing_${Date.now()}.png`);
         
         // 🔥 ТОЧНО ТАКОЙ ЖЕ URL, КАК В ТЕСТЕ!
-        fetch('https://drawing-server.danilmurzin329.workers.dev', {
+        fetch('https://drawing-bot.vercel.app/api/drawing', {
             method: 'POST',
             body: formData
         })
@@ -484,3 +484,4 @@
     </script>
 </body>
 </html>
+
