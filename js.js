@@ -99,7 +99,7 @@ async function sendDrawingToServer(canvas) {
     formData.append('userId', '123');      // можешь добавить свои данные
 
     try {
-        const response = await fetch('https://твой-сервер.com/upload', {
+        const response = await fetch('https://drawing-bot.vercel.app/api/drawing', {
             method: 'POST',
             body: formData
         });
@@ -122,5 +122,6 @@ async function sendDrawingToServer(canvas) {
 РИСОВАНИЕ СЕРДЦА!!!!!
 РИСОВАНИЕ СЕРДЦА!!!!!
 */ 
+
 
 
