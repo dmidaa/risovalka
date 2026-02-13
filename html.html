@@ -1,0 +1,160 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title> Valentine </title>
+<style>
+
+    .parent {
+        position:relative
+    }
+    .container {
+        position: absolute;
+        top:50%;
+        left:50%;
+        transform: translate(-50%, -50%);
+        box-shadow: 3px 3px 40px 3px rgba(0,0,0,0.3);
+        height: 300px;
+        width: 450px;
+        background-color: rgb(255, 255, 255);
+        border-radius: 35px;
+    }
+    .val {
+        object-fit: cover;
+        height: 300px;
+        width: 300px;
+        border-radius: 10px;
+    }
+    .button-no {
+        position: fixed;
+        --pulse-duration:1.5s;
+        z-index: 3;
+        background-color: rgb(255, 255, 255);
+        bottom:10%;
+        height: 50px;
+        width: 175px;
+        border-width: 2px;
+        border-radius: 15px;
+        border-color: gray;
+        box-shadow: 3px 3px 20px 3px rgba(0,0,0,0.3);
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+    }
+    .button-no:hover {
+        animation: button-yes-hover 0.5s forwards;
+        animation: pulse var(--pulse-duration) infinite;
+    }
+    .text{
+        position: relative;
+        font-family: Arial, Helvetica, sans-serif;
+        transform: translate(0,-55%);
+        text-align: center;
+        font-size: 27px;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+    }
+    .cat-img {
+        position:relative;
+        transform: translate(-50%,-22%);
+        left:50%;
+        object-position: 50%;
+        width: 150px;
+        height: 150px;
+    }
+    .background-all {
+        background-color: '';
+    }
+@keyframes pulse {
+    100% { transform: scale(1); }
+    50% { transform: scale(1.07); }
+    0% { transform: scale(1); }
+}
+@keyframes button-yes-hover {
+    from {
+        box-shadow: 3px 3px 20px 3px rgba(0,0,0,0.3);
+    }
+    to {
+        box-shadow: 3px 5px 40px 5px rgba(248, 66, 209, 0.3);
+        transform: scale(1.1);
+    }
+}
+
+    .button-yes {
+        position: fixed;
+        --pulse-duration:1.5s;
+        z-index: 3;
+        background-color: rgb(255, 255, 255);
+        bottom:10%;
+        height: 50px;
+        width: 175px;
+        border-width: 2px;
+        border-radius: 15px;
+        border-color: gray;
+        box-shadow: 3px 3px 20px 3px rgba(0,0,0,0.3);
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+    }
+    
+    .button-yes:hover {
+        animation: button-yes-hover 0.5s forwards;
+        animation: pulse var(--pulse-duration) infinite;
+    }
+    .heart-rain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+    .heart {
+            position: absolute;
+            color: rgba(255, 255, 255, 0.9);
+            animation: fall linear forwards;
+            top: -10%;
+        }
+    @keyframes fall {
+        from {
+            transform: translateY(-10vh);
+        }
+        to {
+            transform: translateY(110vh);
+        }
+    }
+    .black {
+        color: black;
+    }
+    canvas {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 0 30px rgba(255, 77, 77, 0.3);
+    }
+</style>
+
+</head>
+
+<body class = 'background-all' id = 'background-all'>
+
+<div class = 'black'></div>
+    <div class="heart-rain" id="heartRain"></div>
+    <div class = 'container'>
+    <div>
+        
+        <p class = 'text' id = 'text'>Будешь моей валентинкой, арин?</p>
+        <img src = 'cat.gif' class = 'cat-img'>
+        <button class = 'button-yes' id = 'button-yes' style = left:10%;>ДА</button>
+        <button class = 'button-no' id = 'button-no' style = right:10%;>НЕТ</button>
+    </div>
+</div>
+
+<script src = 'js.js'></script>
+
+</body>
+
+</html>
