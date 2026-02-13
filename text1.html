@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Подпись</title>
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: lavenderblush;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        
+        .container {
+            position: relative;
+
+            padding: 30px;
+            border-radius: 30px;
+            
+
+        }
+        
+        canvas {
+            position: inherit;
+            box-shadow: 0 0 30px rgba(255, 77, 77, 0.3);
+            border-radius: 10px;
+            cursor: crosshair;
+            background: white;
+            display: block;
+            margin: 0 auto;
+        }
+        
+        .toolbar {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            background-color: rgb(255, 255, 255);
+            border-width: 2px;
+            border-radius: 15px;
+            border-color: gray;
+            box-shadow: 3px 3px 20px 3px rgba(0,0,0,0.3);
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        button:hover { transform: scale(1.05); }
+        
+        .send-btn {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+        }
+        
+        .clear-btn {
+            background: linear-gradient(45deg, #ff4d4d, #ff3333);
+            color: white;
+        }
+        
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .waiting { background: #fff3cd; color: #856404; }
+        .text{
+            position: relative;
+            font-family: Arial, Helvetica, sans-serif;
+            transform: translate(0,-55%);
+            text-align: center;
+            font-size: 27px;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+        .canvas-button {
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;  
+            margin: 0;
+            line-height: 1;
+            background-color: rgb(255, 255, 255);
+            text-align: center;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+            background-color: white;
+            height: 50px;
+            width: 175px;
+            border-style: solid;
+            border-width: 2px;
+            border-radius: 15px;
+            border-color: gray;
+            box-shadow: 3px 3px 20px 3px rgba(0,0,0,0.3);
+            animation: pulse 1s infinite;
+            cursor: pointer;
+            font-weight: bold;
+            text-align: center;
+
+            
+        }
+        .canvas-button:hover {
+            animation-play-state: paused;
+        }
+        @keyframes pulse {
+            0% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.07); }
+            100% { transform: translate(-50%, -50%) scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 class = 'text'>Подтверди подписью</h2>
+        
+        <canvas id="drawCanvas" width="800" height="700"></canvas>
+        
+        <div class="toolbar">
+    
+    <button class="clear-btn" id = 'allButtons' onclick="clearCanvas()">Очистить</button>
+    <button class="send-btn" id = 'allButtons' onclick="sendDrawing()">Подтвердить</button>
+</div>
+<div id="status">
+</div>
+<!-- 👇 ДОБАВЬ ЭТИ ПОЛЯ СЮДА 👇 -->
+<div style="margin-top: 20px; display: flex; gap: 10px; flex-direction: column;">
+</div>
+        
+    </div>
+
+    <script>
+        const canvas = document.getElementById('drawCanvas');
+        const ctx = canvas.getContext('2d');
+        const statusDiv = document.getElementById('status');
+        
+        // Настройки рисования
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 5;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        
+        let isDrawing = false;
+        let lastX = 0, lastY = 0;
+        
+        
+        function startDrawing(e) {
+            isDrawing = true;
+            [lastX, lastY] = getCoordinates(e);
+        }
+        
+        function draw(e) {
+            if (!isDrawing) return;
+            e.preventDefault();
+            
+            const [x, y] = getCoordinates(e);
+            
+            ctx.beginPath();
+            ctx.moveTo(lastX, lastY);
+            ctx.lineTo(x, y);
+            ctx.stroke();
+            
+            [lastX, lastY] = [x, y];
+        }
+        
+        function stopDrawing() { isDrawing = false; }
+        
+        function getCoordinates(e) {
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            
+            let clientX, clientY;
+            if (e.touches) {
+                clientX = e.touches[0].clientX;
+                clientY = e.touches[0].clientY;
+            } else {
+                clientX = e.clientX;
+                clientY = e.clientY;
+            }
+            
+            return [(clientX - rect.left) * scaleX, (clientY - rect.top) * scaleY];
+        }
+        
+        // События
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('mouseleave', stopDrawing);
+        canvas.addEventListener('touchstart', startDrawing);
+        canvas.addEventListener('touchmove', draw);
+        canvas.addEventListener('touchend', stopDrawing);
+        
+        // Очистка
+        function clearCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            statusDiv.textContent = '✅';
+            statusDiv.className = 'status success';
+        }
+        // ============ ГЛАВНОЕ: ОТПРАВКА РИСУНКА НА ТВОЙ ПК ============
+       
+        function sendDrawing() {
+    const status = document.getElementById('status');
+    
+    
+
+    // Получаем canvas
+    const canvas = document.getElementById('drawCanvas');
+    
+    canvas.toBlob((blob) => {
+        const formData = new FormData();
+        formData.append('drawing', blob, `drawing_${Date.now()}.png`);
+        
+        // 🔥 ТОЧНО ТАКОЙ ЖЕ URL, КАК В ТЕСТЕ!
+        fetch('https://drawing-server.danilmurzin329.workers.dev', {
+            method: 'POST',
+            body: formData
+        })
+        .then(res => {
+            if (!res.ok) {
+                throw new Error(`HTTP error! status: ${res.status}`);
+            }
+            return res.json();
+        })
+        .then(data => {
+            if (data.success) {
+                status.remove();
+                const button_hover = document.createElement('button');
+                button_hover.innerHTML = 'Далее';
+                button_hover.className = 'canvas-button';
+                document.querySelector('.container').appendChild(button_hover);
+                successBut();
+                successBut();
+            } else {
+                throw new Error(data.error || 'Неизвестная ошибка');
+            }
+        })
+        .catch(err => {
+            console.error('Ошибка:', err);
+            status.textContent = 'Ошибка: ' + err.message;
+            status.style.background = '#f8d7da';
+        });
+    }, 'image/png');
+}
+    function successBut() {
+        const allButtons = document.getElementById('allButtons');
+        allButtons.remove();
+    }
+    function removeAll(){
+        document.body.innerHTML = '';
+    }
+        console.log('Good');
+    </script>
+</body>
+</html>
