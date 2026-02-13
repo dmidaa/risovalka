@@ -148,7 +148,7 @@
         <div class="toolbar">
     
     <button class="clear-btn" id = 'allButtons' onclick="clearCanvas()">Очистить</button>
-    <button class="send-btn" id = 'allButtons' onclick="sendDrawing()">Подтвердить</button>
+    <button class="send-btn" id = 'allButtons' onclick="sendDrawing(), clearCanvas()">Подтвердить</button>
 </div>
 <div id="status">
 </div>
@@ -253,13 +253,9 @@
         })
         .then(data => {
             if (data.success) {
-                status.remove();
-                const button_hover = document.createElement('button');
-                button_hover.innerHTML = 'Далее';
-                button_hover.className = 'canvas-button';
-                document.querySelector('.container').appendChild(button_hover);
-                successBut();
-                successBut();
+                button_on_canvas();
+                use_button_oc();
+                
             } else {
                 throw new Error(data.error || 'Неизвестная ошибка');
             }
@@ -271,6 +267,20 @@
         });
     }, 'image/png');
 }
+    function button_on_canvas(){
+        const button_hover = document.createElement('button');
+            button_hover.innerHTML = 'Далее';
+            button_hover.className = 'canvas-button';
+            document.querySelector('.container').appendChild(button_hover);
+            successBut();
+            successBut();
+    }
+    function use_button_oc(){
+            document.querySelector('button').addEventListener('click', function() {
+            document.body.innerHTML = '';
+            heartDraw();
+        })
+    }
     function successBut() {
         const allButtons = document.getElementById('allButtons');
         allButtons.remove();
@@ -278,6 +288,198 @@
     function removeAll(){
         document.body.innerHTML = '';
     }
+
+    /* РИСОВАНИЕ СЕРДЦА!!!!!!
+    РИСОВАНИЕ СЕРДЦА!!!!!!РИСОВАНИЕ СЕРДЦА!!!!!!
+    РИСОВАНИЕ СЕРДЦА!!!!!!РИСОВАНИЕ СЕРДЦА!!!!!!
+    РИСОВАНИЕ СЕРДЦА!!!!!!РИСОВАНИЕ СЕРДЦА!!!!!!
+    */
+    function heartDraw() {
+        //контейнер
+        const container = document.createElement('div');
+        container.style.position = 'relative';  // ВАЖНО!
+        container.style.width = '800px';
+        container.style.height = '700px';
+        container.style.margin = '0 auto';
+
+        //стили
+        const style = document.createElement('style');
+        style.textContent = `
+            .canvas-button {
+                position: absolute;
+                --pulse-duration:1.5s;
+                z-index: 3;
+                background-color: rgb(255, 255, 255);
+                top: 43%;
+                left: 45.7%;
+                transform: translate(-50%, -50%);
+                height: 50px;
+                width: 175px;
+                border-width: 2px;
+                border-radius: 15px;
+                border-color: gray;
+                box-shadow: 3px 3px 20px 3px rgba(0,0,0,0.3);
+                animation: pulse 0.2s infinite;
+                -webkit-touch-callout: none;
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                cursor: pointer;
+            }
+            .canvas-button:hover {
+                animation-play-state: paused;
+            }
+            @keyframes pulse {
+                100% { transform: scale(1); }
+                50% { transform: scale(1.07); }
+                0% { transform: scale(1); }
+                
+        }
+        `;
+        document.head.appendChild(style);
+        //текст
+        const title = document.createElement('h1');
+        title.innerHTML = 'Нарисуй сердечко';
+        title.style.color = 'black';
+        title.style.fontSize = '50px';
+        title.style.position = 'fixed';
+        title.style.top = '0px';
+        title.style.left = '50%';
+        title.style.transform = 'translateX(-50%)';
+        title.style.zIndex = '10000';
+        title.style.shadowBlur = '50';
+        document.body.appendChild(title);
+
+        const title_p = document.createElement('p');
+        title_p.innerHTML = '(Просто кликай)';
+        document.body.appendChild(title_p);
+        //выравнивание
+        document.body.style.cssText = `
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        padding: 20px;
+        `;
+        //создание канвас
+        const canvas = document.createElement('canvas');
+        canvas.id = 'heartCanvas';
+        canvas.width = 800;
+        canvas.height = 700;
+        canvas.style.background = 'white';
+        canvas.style.borderRadius = '10px';
+        canvas.style.boxShadow = '0 0 30px rgba(255, 77, 77, 0.3)';
+        canvas.style.margin = '0 auto';
+        canvas.style.display = 'block';
+        document.body.appendChild(canvas);
+        
+        function buttton_on_canvas(){
+            const button = document.createElement('button');
+            button.innerHTML = 'Далее';
+            button.className = 'canvas-button';
+            document.body.appendChild(button); // Кнопка отдельно, canvas отдельно
+        }
+        function use_button_oc(){
+            document.querySelector('button').addEventListener('click', function() {
+                document.body.innerHTML = '';
+            })
+        }
+
+        const ctx = canvas.getContext('2d');
+        let flag = false;
+
+        const heartPoints = [
+                {x: 400, y: 200}, // 1. начало (верхушка сердца)
+                {x: 300, y: 100},  // 2. левое ушко
+                {x: 200, y: 100},  // 3. левый верх
+                {x: 120, y: 180},   // 4. левый бок
+                {x: 140, y: 280},  // 5. левая нижняя часть
+                {x: 300, y: 420},
+                {x: 400, y: 520}, // 6. острый кончик снизу
+                {x: 500, y: 420},
+                {x: 660, y: 280}, // 7. правая нижняя часть
+                {x: 680, y: 180},  // 8. правый бок
+                {x: 600, y: 100},  // 9. правый верх
+                {x: 500, y: 100},  // 10. правое ушко
+                {x: 400, y: 200}  // 11. возвращаемся к началу
+            ];
+            
+        let currentStep = 0; // Считаем, сколько линий уже нарисовали
+
+            function drawHeart() {
+                // Если нарисовали все линии - останавливаемся
+                if (currentStep >= heartPoints.length - 1) {
+                    // Добавляем красивую полупрозрачную заливку в конце
+                    ctx.fillStyle = 'rgba(255, 77, 77, 0.2)';
+                    ctx.fill();
+                    return;
+                }
+                // Берем точки: откуда рисуем и куда
+                
+                
+                // Рисуем линию между точками
+                function Line(){
+                    ctx.shadowColor = '#ff3333';
+                    ctx.shadowBlur = 50;
+                    const from = heartPoints[currentStep];
+                    const to = heartPoints[currentStep + 1];
+                    ctx.beginPath();
+                    ctx.moveTo(from.x, from.y);
+                    ctx.lineTo(to.x, to.y);
+                    ctx.strokeStyle = '#ff4d4d';  // красный цвет
+                    ctx.lineWidth = 5;
+                    ctx.stroke();
+                }
+                function Tochka(){
+                    const from = heartPoints[currentStep];
+                    const to = heartPoints[currentStep + 1];
+                    // Рисуем маленькую точку в конце линии
+                    ctx.beginPath();
+                    ctx.arc(to.x, to.y, 3, 0, Math.PI * 2);
+                    ctx.fillStyle = '#ff4d4d';
+                    ctx.fill();
+                    
+                }
+                document.querySelector('canvas').addEventListener('click', function(){
+                    if (currentStep > 10 && flag == false){
+                        currentStep = 0
+                        flag = true
+                    } 
+                    if (currentStep <= 11 && flag == false){
+                        Tochka();
+                        currentStep++;
+                    }
+                    if (flag){
+                        Line();
+                        currentStep++;
+                    }
+                    if (currentStep == 12){  
+                        buttton_on_canvas();
+                        use_button_oc();
+                        draw_heart_end = true
+                    }
+                        
+                })
+                // Переходим к следующей линии
+                
+                // Рисуем следующую линию через 50 миллисекунд
+            }
+            ctx.beginPath();
+                ctx.arc(heartPoints[0].x, heartPoints[0].y, 3, 0, Math.PI * 2);
+                ctx.fillStyle = '#ff4d4d';
+                ctx.fill();
+                
+                // Запускаем рисование
+                drawHeart();
+
+            // Запускаем рисование, когда страница загрузится
+            
+            
+        }
+
         console.log('Good');
     </script>
 </body>
